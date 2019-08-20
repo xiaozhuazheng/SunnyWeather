@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:openDrawer="start" >
+        tools:openDrawer="start">
 
         <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -27,7 +27,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:tabIndicatorColor="@android:color/white"
                 app:tabIndicatorHeight="4dp"/>
@@ -38,7 +37,6 @@
                 android:layout_height="?attr/actionBarSize"
                 app:tabIndicatorColor="#fff"
                 app:tabIndicatorHeight="2dp" />
-
         </android.support.design.widget.CoordinatorLayout>
 
         <android.support.design.widget.NavigationView
