@@ -4,30 +4,57 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.azheng.sunnyweather.R;
+import com.azheng.sunnyweather.ui.city.CityFragment;
+import com.azheng.sunnyweather.ui.weather.FragmentAdapter;
+import com.azheng.sunnyweather.ui.weather.WeatherFragment;
 import com.azheng.sunnyweather.util.ToolUnit;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.azheng.sunnyweather.R.id.never;
 import static com.azheng.sunnyweather.R.id.toolbar;
 
 public class MainActivity extends BaseActivity {
     private DrawerLayout mDrawer;
     private NavigationView mNav;
+    private ViewPager mViewPager;
+    private TabLayout mTab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mToolBar = findViewById(toolbar);
+        initView();
+        initData();
+    }
 
+    private void initData() {
+        List<Fragment> myFragment = new ArrayList<>();
+        myFragment.add(new WeatherFragment());
+        myFragment.add(new CityFragment());
+        FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
+        adapter.setData(myFragment);
+        //预加载
+        mViewPager.setOffscreenPageLimit(myFragment.size());
+        mViewPager.setAdapter(adapter);
+        mTab.setupWithViewPager(mViewPager);
+    }
+
+    private void initView() {
+        mToolBar = findViewById(toolbar);
         //避免toolbar被状态栏覆盖
         int l = mToolBar.getPaddingLeft();
         int h = mToolBar.getPaddingTop();
@@ -39,7 +66,6 @@ public class MainActivity extends BaseActivity {
         mToolBar.setTitle("北京");
         mToolBar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolBar);
-
         mToolBar.setNavigationIcon(R.drawable.icon_nav);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.icon_nav);
@@ -54,6 +80,9 @@ public class MainActivity extends BaseActivity {
         mNav = findViewById(R.id.nav_view);
         mNav.setItemIconTintList(null);
         setupDrawerContent(mNav);
+
+        mViewPager = findViewById(R.id.viewPager);
+        mTab = findViewById(R.id.tabLayout);
     }
 
     private void setupDrawerContent(NavigationView mNav) {
