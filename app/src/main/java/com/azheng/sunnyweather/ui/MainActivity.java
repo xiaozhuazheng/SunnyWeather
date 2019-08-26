@@ -23,7 +23,6 @@ import com.azheng.sunnyweather.util.ToolUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.azheng.sunnyweather.R.id.never;
 import static com.azheng.sunnyweather.R.id.toolbar;
 
 public class MainActivity extends BaseActivity {
@@ -51,6 +50,10 @@ public class MainActivity extends BaseActivity {
         mViewPager.setOffscreenPageLimit(myFragment.size());
         mViewPager.setAdapter(adapter);
         mTab.setupWithViewPager(mViewPager);
+        TabLayout.Tab tab = mTab.getTabAt(0);
+        tab.setIcon(R.drawable.tab_home);
+        TabLayout.Tab tab1 = mTab.getTabAt(1);
+        tab1.setIcon(R.drawable.tab_city);
     }
 
     private void initView() {
@@ -66,7 +69,6 @@ public class MainActivity extends BaseActivity {
         mToolBar.setTitle("北京");
         mToolBar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolBar);
-        mToolBar.setNavigationIcon(R.drawable.icon_nav);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setHomeAsUpIndicator(R.drawable.icon_nav);
         actionBar.setDisplayHomeAsUpEnabled(true);

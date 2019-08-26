@@ -37,8 +37,8 @@ public class FragmentAdapter extends FragmentPagerAdapter {
         return 0;
     }
 
-    @Override
+    /*@Override
     public CharSequence getPageTitle(int position) {
         return myTitle.get(position);
-    }
+    }*/
 }
