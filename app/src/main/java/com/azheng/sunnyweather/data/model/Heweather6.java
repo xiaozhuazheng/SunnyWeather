@@ -8,5 +8,5 @@ import java.util.List;
 
 public class Heweather6 {
     @SerializedName("HeWeather6") @Expose
-    public List<Weather> mHeWeatherDataService30s = new ArrayList<>();
+    public List<Weather> HeWeather6 = new ArrayList<>();
 }
