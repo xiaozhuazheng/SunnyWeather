@@ -15,7 +15,6 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.azheng.sunnyweather.R;
 import com.azheng.sunnyweather.ui.city.CityFragment;
-import com.azheng.sunnyweather.ui.weather.FragmentAdapter;
 import com.azheng.sunnyweather.ui.weather.WeatherFragment;
 import com.azheng.sunnyweather.util.ToolUnit;
 import com.google.android.material.navigation.NavigationView;
@@ -43,8 +42,8 @@ public class MainActivity extends BaseActivity {
 
     private void initData() {
         List<Fragment> myFragment = new ArrayList<>();
-        myFragment.add(new WeatherFragment());
-        myFragment.add(new CityFragment());
+        myFragment.add(new WeatherFragment(this));
+        myFragment.add(new CityFragment(this));
         FragmentAdapter adapter = new FragmentAdapter(getSupportFragmentManager());
         adapter.setData(myFragment);
         //预加载

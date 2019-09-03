@@ -1,5 +1,6 @@
 package com.azheng.sunnyweather.ui.city;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
@@ -11,9 +12,10 @@ import android.view.ViewGroup;
 import com.azheng.sunnyweather.R;
 
 public class CityFragment extends Fragment {
+    private Activity activity;
 
-    public CityFragment() {
-        // Required empty public constructor
+    public CityFragment(Activity activity) {
+        this.activity = activity;
     }
 
     @Override

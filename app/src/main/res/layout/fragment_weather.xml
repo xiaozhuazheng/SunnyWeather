@@ -1,15 +1,57 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.azheng.sunnyweather.ui.weather.WeatherFragment">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <data>
+        <variable name="viewModel" type="com.azheng.sunnyweather.ui.weather.WeatherViewModle" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context="com.azheng.sunnyweather.ui.weather.WeatherFragment">
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            bind:loadBingPic="@{viewModel.bingPicUrl}"/>
 
-    <include layout="@layout/error"/>
-</FrameLayout>
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fitsSystemWindows="true">
+
+                        <include layout="@layout/now" />
+
+                        <include layout="@layout/api" />
+
+                        <include layout="@layout/forecast" />
+
+                        <include layout="@layout/suggest" />
+
+                    </LinearLayout>
+
+                    <include layout="@layout/error" />
+
+                </FrameLayout>
+
+            </ScrollView>
+
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </FrameLayout>
+</layout>
