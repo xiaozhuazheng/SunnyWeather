@@ -19,5 +19,6 @@ public class Now {
     public String cond_txt;
     public int tmp;
     public int fl;
+    public int hum;
     public int cond_code;
 }

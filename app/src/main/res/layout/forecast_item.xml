@@ -1,0 +1,50 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable name="forecast" type="com.azheng.sunnyweather.data.model.DailyForecast" />
+    </data>
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp">
+
+        <TextView
+                android:id="@+id/dateText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"
+                android:text="@{forecast.data}"
+                android:textColor="#fff"/>
+
+        <TextView
+                android:id="@+id/infoText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@{forecast.cond_txt_d}"
+                android:textColor="#fff"/>
+
+        <TextView
+                android:id="@+id/maxText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@{forecast.tmp_max}"
+                android:textColor="#fff"/>
+
+        <TextView
+                android:id="@+id/minText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="right"
+                android:text="@{forecast.tmp_min}"
+                android:textColor="#fff"/>
+
+    </LinearLayout>
+</layout>

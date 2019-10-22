@@ -1,5 +1,6 @@
 package com.azheng.sunnyweather.ui;
 
+import android.app.FragmentManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -48,6 +49,7 @@ public class MainActivity extends BaseActivity {
         adapter.setData(myFragment);
         //预加载
         mViewPager.setOffscreenPageLimit(myFragment.size());
+
         mViewPager.setAdapter(adapter);
         mTab.setupWithViewPager(mViewPager);
         TabLayout.Tab tab = mTab.getTabAt(0);

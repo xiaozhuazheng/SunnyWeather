@@ -23,6 +23,7 @@ public class DailyForecast {
                     "wind_dir":"西南风",
                     "wind_sc":"1-2",
                     "wind_spd":"6"*/
+    public String data;
     public int cond_code_d;
     public String cond_txt_d;
     public int cond_code_n;

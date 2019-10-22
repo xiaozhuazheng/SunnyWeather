@@ -25,6 +25,7 @@ public class WeatherFragment extends Fragment {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(activity, R.layout.fragment_weather);
         viewModel = ViewModelProviders.of(this, InjectorUtil.getWeatherModelFactory()).get(WeatherViewModle.class);
+        binding.setResId(R.color.colorPrimary);
         binding.setViewModel(viewModel);
         binding.setLifecycleOwner(this);
 
