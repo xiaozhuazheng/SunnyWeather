@@ -1,5 +1,10 @@
 package com.azheng.sunnyweather.data.model;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+
+import com.azheng.sunnyweather.SunnyApplication;
+
 public class Now {
     /*"cloud":"7",
                 "cond_code":"100",
@@ -17,8 +22,21 @@ public class Now {
                 */
 
     public String cond_txt;
-    public int tmp;
-    public int fl;
-    public int hum;
-    public int cond_code;
+    public String tmp;
+    public String fl;
+    public String hum;
+    public String cond_code;
+
+    public String getTmp(){
+        return tmp + "℃";
+    }
+
+
+    public Drawable getPic(){
+        String pic_name = "w_" + cond_code;
+        Resources resources = SunnyApplication.getAppContext().getResources();
+        int resId = resources.getIdentifier(pic_name, "drawable",SunnyApplication.getAppContext().getPackageName());
+        Drawable image = resources.getDrawable(resId);
+        return image;
+    }
 }

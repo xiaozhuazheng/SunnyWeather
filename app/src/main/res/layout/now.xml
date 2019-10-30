@@ -4,28 +4,36 @@
         <variable name="weather" type="com.azheng.sunnyweather.data.model.Weather" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:background="@color/gray">
 
         <ImageView
             android:id="@+id/now_pic"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tem_parent"
+            android:layout_marginRight="20dp"
+            android:src="@{weather.now.getPic()}"/>
 
         <LinearLayout
+            android:id="@+id/tem_parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="end">
+            android:layout_alignParentRight="true"
+            android:layout_alignBottom="@id/now_pic"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/now_tem"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{weather.now.tmp}"
+                android:text="@{weather.now.getTmp()}"
                 android:textColor="#fff"
                 android:textSize="20sp"/>
 
@@ -33,10 +41,10 @@
                 android:id="@+id/now_max"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{weather.now.fl}"
+                android:text="@{weather.now.cond_txt}"
                 android:textColor="#fff"
-                android:textSize="20sp" />
+                android:textSize="15sp" />
         </LinearLayout>
 
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

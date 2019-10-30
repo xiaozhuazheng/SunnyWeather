@@ -9,13 +9,10 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="centerCrop"
-            bind:loadBingPic="@{viewModel.picUrl}"/>
+        android:layout_height="match_parent"
+        android:background="#CCFFE4C4"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
@@ -45,13 +42,13 @@
 
                         <!--<include layout="@layout/api"  bind:weather="@{viewModel.weather}"/>-->
 
-                        <include
+                        <!--<include
                             layout="@layout/forecast"
                             bind:weather="@{viewModel.weather}" />
 
                         <include
                             layout="@layout/suggest"
-                            bind:weather="@{viewModel.weather}" />
+                            bind:weather="@{viewModel.weather}" />-->
 
                     </LinearLayout>
 

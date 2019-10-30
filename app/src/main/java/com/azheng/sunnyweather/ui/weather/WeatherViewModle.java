@@ -1,11 +1,11 @@
 package com.azheng.sunnyweather.ui.weather;
 
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
 import com.azheng.sunnyweather.data.WeatherRepository;
 import com.azheng.sunnyweather.data.model.Weather;
 import com.azheng.sunnyweather.util.NetCallback;
+
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 
 public class WeatherViewModle extends ViewModel implements NetCallback<Weather> {
     private WeatherRepository mRespository;
@@ -16,6 +16,9 @@ public class WeatherViewModle extends ViewModel implements NetCallback<Weather> 
 
     public WeatherViewModle(WeatherRepository repository) {
         this.mRespository = repository;
+        weather = new MutableLiveData<>();
+        picUrl = new MutableLiveData<>();
+        refreshing = new MutableLiveData<>();
     }
 
     public void getWeather() {
