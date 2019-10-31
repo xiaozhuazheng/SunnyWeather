@@ -10,9 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#CCFFE4C4"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp">
+        android:background="#CCFFE4C4">
 
         <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/swipeRefresh"
@@ -28,7 +26,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -42,17 +40,30 @@
 
                         <!--<include layout="@layout/api"  bind:weather="@{viewModel.weather}"/>-->
 
-                        <!--<include
+                        <include
                             layout="@layout/forecast"
                             bind:weather="@{viewModel.weather}" />
 
                         <include
                             layout="@layout/suggest"
-                            bind:weather="@{viewModel.weather}" />-->
+                            bind:weather="@{viewModel.weather}" />
 
                     </LinearLayout>
 
-                    <include layout="@layout/error" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:visibility="@{viewModel.weatherSucess ? View.GONE : View.VISIBLE}">
+
+                        <ImageView
+                            android:id="@+id/iv_erro"
+                            android:layout_width="200dp"
+                            android:layout_height="200dp"
+                            android:layout_marginTop="50dp"
+                            android:src="@drawable/erro"
+                            android:layout_marginBottom="50dp"/>
+                    </LinearLayout>
 
                 </FrameLayout>
 

@@ -12,9 +12,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:gravity="left"
                 android:layout_weight="2"
-                android:text="@{forecast.data}"
-                android:textColor="#fff"/>
+                android:text="@{forecast.date}"
+                android:textColor="@color/white"/>
 
         <TextView
                 android:id="@+id/infoText"
@@ -24,7 +25,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@{forecast.cond_txt_d}"
-                android:textColor="#fff"/>
+                android:textColor="@color/white"/>
 
         <TextView
                 android:id="@+id/maxText"
@@ -33,18 +34,8 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:text="@{forecast.tmp_max}"
-                android:textColor="#fff"/>
-
-        <TextView
-                android:id="@+id/minText"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="right"
-                android:text="@{forecast.tmp_min}"
-                android:textColor="#fff"/>
+                android:text="@{forecast.getTemp()}"
+                android:textColor="@color/white"/>
 
     </LinearLayout>
 </layout>

@@ -1,14 +1,10 @@
 package com.azheng.sunnyweather.data;
 
 import com.azheng.sunnyweather.data.model.HeWeather6;
-import com.azheng.sunnyweather.data.model.Weather;
 import com.azheng.sunnyweather.data.net.WeatherApi;
 import com.azheng.sunnyweather.data.net.WeatherNetIns;
 import com.azheng.sunnyweather.util.Config;
 import com.azheng.sunnyweather.util.NetCallback;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Observer;
@@ -57,7 +53,7 @@ public class WeatherRepository {
 
                     @Override
                     public void onError(Throwable e) {
-                        e.printStackTrace();
+                        callback.onFailure();
                     }
 
                     @Override

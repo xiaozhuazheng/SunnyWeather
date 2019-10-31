@@ -4,6 +4,9 @@ package com.azheng.sunnyweather.util;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.widget.Toast;
+
+import com.azheng.sunnyweather.SunnyApplication;
 
 public class ToolUnit {
     /**
@@ -47,5 +50,9 @@ public class ToolUnit {
 
     private static boolean ExistSDCard() {
         return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+    }
+
+    public static void toast(String s){
+        Toast.makeText(SunnyApplication.getAppContext(), s, Toast.LENGTH_SHORT).show();
     }
 }

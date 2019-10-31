@@ -23,11 +23,15 @@ public class DailyForecast {
                     "wind_dir":"西南风",
                     "wind_sc":"1-2",
                     "wind_spd":"6"*/
-    public String data;
-    public int cond_code_d;
+    public String date;
+    public String cond_code_d;
     public String cond_txt_d;
-    public int cond_code_n;
+    public String cond_code_n;
     public String cond_txt_n;
-    public int tmp_max;
-    public int tmp_min;
+    public String tmp_max;
+    public String tmp_min;
+
+    public String getTemp(){
+        return tmp_min + " / " + tmp_max + "℃";
+    }
 }

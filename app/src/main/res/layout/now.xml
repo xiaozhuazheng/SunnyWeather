@@ -7,8 +7,8 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:layout_margin="5dp"
+        android:padding="15dp"
         android:background="@color/gray">
 
         <ImageView
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignBottom="@id/now_pic"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:orientation="vertical">
 
             <TextView
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{weather.now.getTmp()}"
-                android:textColor="#fff"
+                android:textColor="@color/white"
                 android:textSize="20sp"/>
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{weather.now.cond_txt}"
-                android:textColor="#fff"
+                android:textColor="@color/white"
                 android:textSize="15sp" />
         </LinearLayout>
 
