@@ -26,6 +26,7 @@ public class Now {
     public String fl;
     public String hum;
     public String cond_code;
+    public String wind_sc;
 
     public String getTmp(){
         return tmp + "℃";

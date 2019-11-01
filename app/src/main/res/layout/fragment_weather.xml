@@ -38,7 +38,7 @@
                             layout="@layout/now"
                             bind:weather="@{viewModel.weather}" />
 
-                        <!--<include layout="@layout/api"  bind:weather="@{viewModel.weather}"/>-->
+                        <include layout="@layout/api"  bind:weather="@{viewModel.weather}"/>
 
                         <include
                             layout="@layout/forecast"

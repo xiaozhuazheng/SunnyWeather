@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@{weather.lifestyle.get(0).txt}"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textColor="@color/white" />
 
         <TextView
@@ -35,7 +35,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@{weather.lifestyle.get(1).txt}"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textColor="@color/white" />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:text="@{weather.lifestyle.get(2).txt}"
-            android:textSize="10sp"
+            android:textSize="12sp"
             android:textColor="@color/white" />
     </LinearLayout>
 </layout>

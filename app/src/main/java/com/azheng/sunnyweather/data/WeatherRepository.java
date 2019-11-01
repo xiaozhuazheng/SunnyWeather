@@ -37,7 +37,8 @@ public class WeatherRepository {
     }
 
     public void getWeather(NetCallback callback) {
-        Observable<HeWeather6> observable = mWeatherApi.mWeatherAPI(Config.city,Config.KEY);
+        String city = CityRepository.getCityIns().getLocalCity();
+        Observable<HeWeather6> observable = mWeatherApi.mWeatherAPI(city,Config.KEY);
         observable.observeOn(AndroidSchedulers.mainThread())//事件消费线程
                 .subscribeOn(Schedulers.newThread())//事件发生的线程
                 .subscribe(new Observer<HeWeather6>() {
