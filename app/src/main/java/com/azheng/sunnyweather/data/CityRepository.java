@@ -7,6 +7,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.azheng.sunnyweather.data.model.CityModel;
+
+import java.util.ArrayList;
 
 /**
 * 获取城市仓库
@@ -76,11 +79,25 @@ public class CityRepository {
 
     public String getLocalCity(){
         if (mLocalCity == null){
-            //返回上一次定位城市
+            //返回默认城市
             return "深圳";
         } else {
             return mLocalCity;
         }
+    }
+
+    public ArrayList<CityModel> getAddCity(){
+        //先从数据库获取添加的城市，在请求天气数据
+
+        ArrayList<CityModel> list = new ArrayList<>();
+        for (int i = 0;i< 10;i++){
+            CityModel city = new CityModel();
+            city.setCityName("深圳");
+            city.setCityWeather("多云");
+            city.setCityTmp("25");
+            list.add(city);
+        }
+        return list;
     }
 
 }

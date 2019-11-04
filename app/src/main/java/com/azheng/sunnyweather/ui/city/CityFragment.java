@@ -1,19 +1,24 @@
 package com.azheng.sunnyweather.ui.city;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.azheng.sunnyweather.R;
+import com.azheng.sunnyweather.databinding.FragmentCityBinding;
+import com.azheng.sunnyweather.ui.weather.WeatherViewModle;
+import com.azheng.sunnyweather.util.InjectorUtil;
+
+import androidx.databinding.DataBindingUtil;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 
 public class CityFragment extends Fragment {
     private Activity activity;
+    private FragmentCityBinding binding;
+    private CityViewModle viewModel;
 
     public CityFragment(Activity activity) {
         this.activity = activity;
@@ -27,17 +32,17 @@ public class CityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_city, container, false);
-    }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
+        // 1、对布局需要绑定的内容进行加载
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_city, container, false);
+        // 2、获取到视图
+        View view = binding.getRoot();
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
+        viewModel = ViewModelProviders.of(this, InjectorUtil.getCityModelFactory()).get(CityViewModle.class);
+
+        binding.setViewModel(viewModel);
+
+        viewModel.getAddCity();
+        return view;
     }
 }

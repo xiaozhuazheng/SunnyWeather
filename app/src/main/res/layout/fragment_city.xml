@@ -1,12 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.azheng.sunnyweather.ui.city.CityFragment">
+    xmlns:bind="http://schemas.android.com/apk/res-auto">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+        <import type="android.view.View"/>
+        <variable name="viewModel" type="com.azheng.sunnyweather.ui.city.CityViewModle" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="city fragment" />
-</FrameLayout>
+        android:background="#CCFFE4C4"
+        tools:context="com.azheng.sunnyweather.ui.city.CityFragment">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="@{viewModel.hasCity ? View.GONE : View.VISIBLE,default=gone}">
+
+            <ImageView
+                android:id="@+id/iv_erro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/null_city"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15sp"
+                android:text="@string/null_city"/>
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:id="@+id/forecastLayout"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                bind:showAddCity="@{viewModel.mCityList}">
+            </LinearLayout>
+
+        </ScrollView>
+
+    </FrameLayout>
+</layout>

@@ -6,10 +6,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.azheng.sunnyweather.R;
+import com.azheng.sunnyweather.data.model.CityModel;
 import com.azheng.sunnyweather.data.model.DailyForecast;
 import com.azheng.sunnyweather.data.model.Weather;
+import com.azheng.sunnyweather.databinding.CityItemBinding;
 import com.azheng.sunnyweather.databinding.ForecastItemBinding;
 import com.bumptech.glide.Glide;
+
+import java.util.ArrayList;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
@@ -39,6 +43,20 @@ public class DataBingAdapters {
             View view = LayoutInflater.from(linearLayout.getContext()).inflate(R.layout.forecast_item,linearLayout,false);
             ForecastItemBinding binding = DataBindingUtil.bind(view);
             binding.setForecast(forecast);
+            linearLayout.addView(view);
+        }
+    }
+
+    @BindingAdapter("bind:showAddCity")
+    public static void showAddCity(LinearLayout linearLayout , ArrayList<CityModel> cityList){
+        if (cityList == null){
+            return;
+        }
+        linearLayout.removeAllViews();
+        for (CityModel item: cityList) {
+            View view = LayoutInflater.from(linearLayout.getContext()).inflate(R.layout.city_item,linearLayout,false);
+            CityItemBinding binding = DataBindingUtil.bind(view);
+            binding.setCity(item);
             linearLayout.addView(view);
         }
     }
