@@ -39,8 +39,8 @@ public class CityFragment extends Fragment {
         View view = binding.getRoot();
 
         viewModel = ViewModelProviders.of(this, InjectorUtil.getCityModelFactory()).get(CityViewModle.class);
-
         binding.setViewModel(viewModel);
+        binding.setLifecycleOwner(this);
 
         viewModel.getAddCity();
         return view;

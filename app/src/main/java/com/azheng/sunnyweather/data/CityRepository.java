@@ -8,8 +8,21 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.azheng.sunnyweather.data.model.CityModel;
+import com.azheng.sunnyweather.data.model.HeWeather6;
+import com.azheng.sunnyweather.data.model.Weather;
+import com.azheng.sunnyweather.data.net.WeatherApi;
+import com.azheng.sunnyweather.data.net.WeatherNetIns;
+import com.azheng.sunnyweather.util.Config;
+import com.azheng.sunnyweather.util.NetCallback;
 
 import java.util.ArrayList;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.schedulers.Schedulers;
 
 /**
 * 获取城市仓库
@@ -20,12 +33,17 @@ import java.util.ArrayList;
 public class CityRepository {
     private static CityRepository mIns;
     private String mLocalCity;
+    private WeatherApi mWeatherApi;
+    private ArrayList<CityModel> mList;
+
     //声明mlocationClient对象
     public AMapLocationClient mlocationClient;
     //声明mLocationOption对象
     public AMapLocationClientOption mLocationOption = null;
 
-    private CityRepository() {}
+    private CityRepository() {
+        mWeatherApi = WeatherNetIns.getWeatherApi();
+    }
 
     public static CityRepository getCityIns(){
         if (mIns == null){
@@ -86,18 +104,54 @@ public class CityRepository {
         }
     }
 
-    public ArrayList<CityModel> getAddCity(){
+    public void getAddCity(NetCallback callback){
         //先从数据库获取添加的城市，在请求天气数据
+        ArrayList<String> citylist = new ArrayList<>();
+        citylist.add("重庆");
+        citylist.add("深圳");
+        citylist.add("北京");
 
-        ArrayList<CityModel> list = new ArrayList<>();
-        for (int i = 0;i< 10;i++){
-            CityModel city = new CityModel();
-            city.setCityName("深圳");
-            city.setCityWeather("多云");
-            city.setCityTmp("25");
-            list.add(city);
+        if (mList == null){
+            mList = new ArrayList<>();
+        } else {
+            mList.clear();
         }
-        return list;
+        Observer<HeWeather6> observer = new Observer<HeWeather6>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+
+            }
+
+            @Override
+            public void onNext(HeWeather6 heWeather6) {
+                Weather weather = heWeather6.HeWeather6.get(0);
+                CityModel cityModel = new CityModel();
+                cityModel.setCityName(weather.basic.location);
+                cityModel.setCityWeather(weather.now.cond_txt);
+                cityModel.setCityTmp(weather.now.getTmp());
+                mList.add(cityModel);
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                callback.onFailure();
+            }
+
+            @Override
+            public void onComplete() {
+                callback.onSucess(mList);
+            }
+        };
+
+        Observable.fromIterable(citylist)
+                .flatMap(new Function<String, Observable<HeWeather6>>() {
+                    @Override
+                    public Observable<HeWeather6> apply(String s) throws Exception {
+                        return mWeatherApi.mWeatherAPI(s,Config.KEY);
+                    }
+                }).observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(observer);
     }
 
 }
