@@ -38,4 +38,9 @@ public class CityViewModle extends ViewModel implements NetCallback<ArrayList<Ci
     public void onFailure() {
 
     }
+
+    public void onFloatClick(){
+        //去添加城市界面
+
+    }
 }
