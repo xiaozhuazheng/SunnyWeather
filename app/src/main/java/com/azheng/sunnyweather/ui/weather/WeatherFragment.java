@@ -45,7 +45,7 @@ public class WeatherFragment extends Fragment {
         // 2、获取到视图
         View view = binding.getRoot();
 
-        viewModel = ViewModelProviders.of(this, InjectorUtil.getWeatherModelFactory()).get(WeatherViewModle.class);
+        viewModel = ViewModelProviders.of(this, InjectorUtil.getWeatherModelFactory(activity)).get(WeatherViewModle.class);
 
         binding.setViewModel(viewModel);
         binding.setResId(R.color.colorPrimary);

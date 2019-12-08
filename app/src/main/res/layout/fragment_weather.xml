@@ -54,7 +54,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:visibility="@{viewModel.weatherSucess ? View.GONE : View.VISIBLE}">
+                        android:visibility="@{viewModel.weatherSucess ? View.GONE : View.VISIBLE }">
 
                         <ImageView
                             android:id="@+id/iv_erro"

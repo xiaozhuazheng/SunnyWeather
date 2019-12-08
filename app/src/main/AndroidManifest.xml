@@ -43,6 +43,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.city.CityChooseActivity"/>
+
         //高德定位服务
         <service android:name="com.amap.api.location.APSService"></service>
         <meta-data android:name="com.amap.api.v2.apikey" android:value="8bcd877d25caad6ed6403ce05569b333"/>

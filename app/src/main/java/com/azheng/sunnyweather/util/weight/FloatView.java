@@ -9,6 +9,8 @@ import android.view.View;
 
 import androidx.annotation.Nullable;
 
+import com.azheng.sunnyweather.R;
+
 public class FloatView extends View {
     private Paint mPaint;
     private int mWidth;
@@ -47,7 +49,7 @@ public class FloatView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(getResources().getColor(R.color.blue));
         canvas.drawCircle(mWidth/2,mHeight/2,mRadius,mPaint);
         mPaint.setColor(Color.WHITE);
         mPaint.setStrokeWidth(3);

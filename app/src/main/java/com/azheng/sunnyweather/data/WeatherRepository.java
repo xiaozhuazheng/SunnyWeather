@@ -20,6 +20,12 @@ import io.reactivex.schedulers.Schedulers;
 public class WeatherRepository {
     private static WeatherRepository mIns;
     private WeatherApi mWeatherApi;
+    private NetCallback mCallback;
+
+    private String mLocationCity;
+    public String getLocationCity() {
+        return mLocationCity;
+    }
 
     private WeatherRepository(){
         mWeatherApi = WeatherNetIns.getWeatherApi();
@@ -36,9 +42,31 @@ public class WeatherRepository {
         return mIns;
     }
 
-    public void getWeather(NetCallback callback) {
-        String city = CityRepository.getCityIns().getLocalCity();
-        Observable<HeWeather6> observable = mWeatherApi.mWeatherAPI(city,Config.KEY);
+    /**
+     * 获取定位并返回天气数据
+     */
+    public void getWeatherbyLocation(NetCallback callback){
+        mCallback = callback;
+    }
+
+    public void locationSucess(String city){
+        mLocationCity = city;
+        mCallback.onFailure("定位到" + mLocationCity);
+        doWeather();
+    }
+
+    public void locationFaile(String city){
+        mLocationCity = city;
+        mCallback.onFailure("定位失败，加载默认城市");
+        doWeather();
+    }
+
+    public void refreshWeather() {
+        doWeather();
+    }
+
+    private void doWeather(){
+        Observable<HeWeather6> observable = mWeatherApi.mWeatherAPI(mLocationCity,Config.KEY);
         observable.observeOn(AndroidSchedulers.mainThread())//事件消费线程
                 .subscribeOn(Schedulers.newThread())//事件发生的线程
                 .subscribe(new Observer<HeWeather6>() {
@@ -49,12 +77,12 @@ public class WeatherRepository {
 
                     @Override
                     public void onNext(HeWeather6 heweather6) {
-                        callback.onSucess(heweather6.HeWeather6.get(0));
+                        mCallback.onSucess(heweather6.HeWeather6.get(0));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        callback.onFailure();
+                        mCallback.onFailure("获取天气数据失败");
                     }
 
                     @Override

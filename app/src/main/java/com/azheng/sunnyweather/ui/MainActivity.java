@@ -116,4 +116,8 @@ public class MainActivity extends BaseActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    public void setToobarTitle(String title){
+        mToolBar.setTitle(title);
+    }
 }

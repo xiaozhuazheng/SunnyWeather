@@ -1,12 +1,16 @@
 package com.azheng.sunnyweather.data;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.azheng.sunnyweather.data.db.City;
+import com.azheng.sunnyweather.data.db.DBManager;
 import com.azheng.sunnyweather.data.model.CityModel;
 import com.azheng.sunnyweather.data.model.HeWeather6;
 import com.azheng.sunnyweather.data.model.Weather;
@@ -15,14 +19,19 @@ import com.azheng.sunnyweather.data.net.WeatherNetIns;
 import com.azheng.sunnyweather.util.Config;
 import com.azheng.sunnyweather.util.NetCallback;
 
+import org.litepal.LitePal;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import rx.functions.Func0;
 
 /**
 * 获取城市仓库
@@ -32,9 +41,8 @@ import io.reactivex.schedulers.Schedulers;
 */
 public class CityRepository {
     private static CityRepository mIns;
-    private String mLocalCity;
+    private String mLocalCity = "北京";
     private WeatherApi mWeatherApi;
-    private ArrayList<CityModel> mList;
 
     //声明mlocationClient对象
     public AMapLocationClient mlocationClient;
@@ -64,6 +72,8 @@ public class CityRepository {
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //设置定位间隔,单位毫秒,默认为2000ms
         mLocationOption.setInterval(10000);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
         //设置定位参数
         mlocationClient.setLocationOption(mLocationOption);
 
@@ -77,16 +87,18 @@ public class CityRepository {
             @Override
             public void onLocationChanged(AMapLocation amapLocation) {
                 if (amapLocation != null) {
-                    if (amapLocation.getErrorCode() == 0) {
+                    if (amapLocation.getErrorCode() == 0 && !amapLocation.getCity().equals("")) {
                         //定位成功回调信息，设置相关消息
                         mLocalCity = amapLocation.getCity();
                         //定位后停止定位服务
                         mlocationClient.stopLocation();
+                        //更新天气数据
+                        WeatherRepository.getInsances().locationSucess(mLocalCity);
+                        //加入数据库
+                        //DBManager.getIns().putCity(mLocalCity);
                     } else {
-                        //显示错误信息ErrCode是错误码，errInfo是错误信息，详见错误码表。
-                        Log.e("AmapError","location Error, ErrCode:"
-                                + amapLocation.getErrorCode() + ", errInfo:"
-                                + amapLocation.getErrorInfo());
+                        //定位失败
+                        WeatherRepository.getInsances().locationFaile(mLocalCity);
                     }
                 }
             }
@@ -95,27 +107,9 @@ public class CityRepository {
         mlocationClient.startLocation();
     }
 
-    public String getLocalCity(){
-        if (mLocalCity == null){
-            //返回默认城市
-            return "深圳";
-        } else {
-            return mLocalCity;
-        }
-    }
-
     public void getAddCity(NetCallback callback){
-        //先从数据库获取添加的城市，在请求天气数据
-        ArrayList<String> citylist = new ArrayList<>();
-        citylist.add("重庆");
-        citylist.add("深圳");
-        citylist.add("北京");
+        ArrayList<CityModel> list = new ArrayList<>();
 
-        if (mList == null){
-            mList = new ArrayList<>();
-        } else {
-            mList.clear();
-        }
         Observer<HeWeather6> observer = new Observer<HeWeather6>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -126,24 +120,34 @@ public class CityRepository {
             public void onNext(HeWeather6 heWeather6) {
                 Weather weather = heWeather6.HeWeather6.get(0);
                 CityModel cityModel = new CityModel();
-                cityModel.setCityName(weather.basic.location);
-                cityModel.setCityWeather(weather.now.cond_txt);
-                cityModel.setCityTmp(weather.now.getTmp());
-                mList.add(cityModel);
+                if (weather.basic != null) {
+                    cityModel.setCityName(weather.basic.location);
+                }
+                if (weather.now != null) {
+                    cityModel.setCityWeather(weather.now.cond_txt);
+                    cityModel.setCityTmp(weather.now.getTmp());
+                }
+                list.add(cityModel);
             }
 
             @Override
             public void onError(Throwable e) {
-                callback.onFailure();
+                callback.onFailure("获取已添加城市天气失败");
             }
 
             @Override
             public void onComplete() {
-                callback.onSucess(mList);
+                if (list.size() < 1){
+                    callback.onFailure("无添加城市");
+                } else {
+                    callback.onSucess(list);
+                }
             }
         };
 
-        Observable.fromIterable(citylist)
+        Observable.defer(() -> {
+            return Observable.fromIterable(DBManager.getIns().getAllCity());
+        }).map(city -> city.getName())
                 .flatMap(new Function<String, Observable<HeWeather6>>() {
                     @Override
                     public Observable<HeWeather6> apply(String s) throws Exception {

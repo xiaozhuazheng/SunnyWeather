@@ -1,11 +1,15 @@
 package com.azheng.sunnyweather;
 
-import android.app.Application;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 
 import com.azheng.sunnyweather.data.CityRepository;
 
-public class SunnyApplication extends Application {
+import org.litepal.LitePal;
+import org.litepal.LitePalApplication;
+import org.litepal.tablemanager.Connector;
+
+public class SunnyApplication extends LitePalApplication {
     private static Context mAppContext;
 
     @Override
@@ -16,6 +20,8 @@ public class SunnyApplication extends Application {
     }
 
     private void init() {
+        LitePal.initialize(this);
+        SQLiteDatabase db = Connector.getDatabase();
         CityRepository.getCityIns().init(mAppContext);
     }
 
