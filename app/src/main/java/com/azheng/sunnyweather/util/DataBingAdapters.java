@@ -1,7 +1,10 @@
 package com.azheng.sunnyweather.util;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.view.LayoutInflater;
@@ -11,6 +14,7 @@ import android.widget.LinearLayout;
 
 import com.azheng.sunnyweather.R;
 import com.azheng.sunnyweather.SunnyApplication;
+import com.azheng.sunnyweather.data.db.DBData;
 import com.azheng.sunnyweather.data.db.DBManager;
 import com.azheng.sunnyweather.data.model.CityModel;
 import com.azheng.sunnyweather.data.model.DailyForecast;
@@ -18,13 +22,21 @@ import com.azheng.sunnyweather.data.model.Weather;
 import com.azheng.sunnyweather.databinding.CityItemBinding;
 import com.azheng.sunnyweather.databinding.DbCityBinding;
 import com.azheng.sunnyweather.databinding.ForecastItemBinding;
+import com.azheng.sunnyweather.ui.city.CityViewModle;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 public class DataBingAdapters {
 
@@ -81,14 +93,30 @@ public class DataBingAdapters {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     CityModel city = binding.getCity();
-                                    DBManager.getIns().deleteCity(city.getCityName(), new Handler(){
-                                        @Override
-                                        public void handleMessage(Message msg) {
-                                            super.handleMessage(msg);
-                                            linearLayout.removeView(view);
-                                            ToolUnit.toast("删除成功");
-                                        }
-                                    });
+                                    Observable observable = DBManager.getIns().deleteCity(city.getCityName());
+                                    observable.observeOn(AndroidSchedulers.mainThread())
+                                            .subscribeOn(Schedulers.newThread())
+                                            .subscribe(new Observer() {
+                                                @Override
+                                                public void onSubscribe(Disposable d) {
+
+                                                }
+
+                                                @Override
+                                                public void onNext(Object o) {
+
+                                                }
+
+                                                @Override
+                                                public void onError(Throwable e) {
+
+                                                }
+
+                                                @Override
+                                                public void onComplete() {
+                                                    linearLayout.removeView(v);
+                                                }
+                                            });
                                 }
                             });
                     dialog.show();
@@ -99,16 +127,35 @@ public class DataBingAdapters {
     }
 
     @BindingAdapter("bind:selectCity")
-    public static void selectCity(LinearLayout linearLayout , ArrayList<CityModel> cityList){
+    public static void selectCity(LinearLayout linearLayout , List<DBData> cityList){
         if (cityList == null){
             return;
         }
         linearLayout.removeAllViews();
-        for (CityModel item: cityList) {
+        for (DBData item: cityList) {
             View view = LayoutInflater.from(linearLayout.getContext()).inflate(R.layout.db_city,linearLayout,false);
             DbCityBinding binding = DataBindingUtil.bind(view);
-            binding.setCity(item);
+            binding.setData(item);
             linearLayout.addView(view);
+
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (item.Pid == -1){
+                        //provices
+                        Intent intent = new Intent();
+                        intent.setAction("PROVICENS_CLIK");
+                        intent.putExtra("provices_id",item.sort);
+                        SunnyApplication.getAppContext().sendBroadcast(intent);
+                    } else {
+                        //city
+                        Intent intent = new Intent();
+                        intent.setAction("ADD_CITY");
+                        intent.putExtra("add_city",item.name);
+                        SunnyApplication.getAppContext().sendBroadcast(intent);
+                    }
+                }
+            });
         }
     }
 }

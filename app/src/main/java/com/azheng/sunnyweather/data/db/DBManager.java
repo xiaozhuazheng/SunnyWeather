@@ -20,6 +20,10 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+
 public class DBManager {
     private static DBManager mIns = null;
 
@@ -39,19 +43,20 @@ public class DBManager {
     /**
     * 删
     */
-    public void deleteCity(String name, Handler handler){
+    public Observable deleteCity(String name){
         /* DataSupport.deleteAll(News.class, "title = ? and commentcount = ?", "今日iPhone6发布", "0");*/
         if (name == null){
-            return;
+            return null;
         }
 
-        handler.post(new Runnable() {
+        Observable observable = Observable.create(new ObservableOnSubscribe<Object>() {
             @Override
-            public void run() {
-                LitePal.deleteAll(City.class, "name = ?", name);
-                handler.handleMessage(null);
+            public void subscribe(ObservableEmitter<Object> emitter) throws Exception {
+                LitePal.deleteAll(City.class, "name = ?", name + "市");
+                emitter.onComplete();
             }
         });
+        return observable;
     }
 
     /**
@@ -150,17 +155,17 @@ public class DBManager {
         return null;
     }
 
-    public List<DBProvince> loadProvinces() {
+    public List<DBData> loadProvinces() {
 
-        List<DBProvince> list = new ArrayList<>();
+        List<DBData> list = new ArrayList<>();
 
         Cursor cursor = database.query("T_Province", null, null, null, null, null, null);
 
         if (cursor.moveToFirst()) {
             do {
-                DBProvince province = new DBProvince();
-                province.ProSort = cursor.getInt(cursor.getColumnIndex("ProSort"));
-                province.ProName = cursor.getString(cursor.getColumnIndex("ProName"));
+                DBData province = new DBData();
+                province.sort = cursor.getInt(cursor.getColumnIndex("ProSort"));
+                province.name = cursor.getString(cursor.getColumnIndex("ProName"));
                 list.add(province);
             } while (cursor.moveToNext());
         }
@@ -168,15 +173,15 @@ public class DBManager {
         return list;
     }
 
-    public List<DBCity> loadCities(int ProID) {
-        List<DBCity> list = new ArrayList<>();
+    public List<DBData> loadCities(int ProID) {
+        List<DBData> list = new ArrayList<>();
         Cursor cursor = database.query("T_City", null, "ProID = ?", new String[] { String.valueOf(ProID) }, null, null, null);
         if (cursor.moveToFirst()) {
             do {
-                DBCity city = new DBCity();
-                city.CityName = cursor.getString(cursor.getColumnIndex("CityName"));
-                city.ProID = ProID;
-                city.CitySort = cursor.getInt(cursor.getColumnIndex("CitySort"));
+                DBData city = new DBData();
+                city.name = cursor.getString(cursor.getColumnIndex("CityName"));
+                city.Pid = ProID;
+                city.sort = cursor.getInt(cursor.getColumnIndex("CitySort"));
                 list.add(city);
             } while (cursor.moveToNext());
         }

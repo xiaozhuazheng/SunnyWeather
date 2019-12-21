@@ -1,15 +1,13 @@
 package com.azheng.sunnyweather.data;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.azheng.sunnyweather.data.db.City;
+import com.azheng.sunnyweather.data.db.DBData;
 import com.azheng.sunnyweather.data.db.DBManager;
 import com.azheng.sunnyweather.data.model.CityModel;
 import com.azheng.sunnyweather.data.model.HeWeather6;
@@ -19,19 +17,16 @@ import com.azheng.sunnyweather.data.net.WeatherNetIns;
 import com.azheng.sunnyweather.util.Config;
 import com.azheng.sunnyweather.util.NetCallback;
 
-import org.litepal.LitePal;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import rx.functions.Func0;
 
 /**
 * 获取城市仓库
@@ -146,7 +141,8 @@ public class CityRepository {
         };
 
         Observable.defer(() -> {
-            return Observable.fromIterable(DBManager.getIns().getAllCity());
+            List<City> citys = DBManager.getIns().getAllCity();
+            return Observable.fromIterable(citys);
         }).map(city -> city.getName())
                 .flatMap(new Function<String, Observable<HeWeather6>>() {
                     @Override
@@ -156,6 +152,60 @@ public class CityRepository {
                 }).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe(observer);
+    }
+
+    /**
+     * DB provicens
+     */
+    public void getProvince(NetCallback callback){
+        Observable.defer(() -> {
+            return Observable.fromIterable(DBManager.getIns().loadProvinces());
+        }).toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new SingleObserver<List<DBData>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<DBData> list) {
+                        callback.onSucess(list);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+    }
+
+    /**
+     * DB city
+     */
+    public void getCity(int Pid , NetCallback callback){
+        Observable.defer(() -> {
+            return Observable.fromIterable(DBManager.getIns().loadCities(Pid));
+        }).toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.newThread())
+                .subscribe(new SingleObserver<List<DBData>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(List<DBData> list) {
+                        callback.onSucess(list);
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
     }
 
 }

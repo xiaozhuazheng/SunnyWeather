@@ -3,8 +3,10 @@ package com.azheng.sunnyweather.ui.city;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Handler;
@@ -19,6 +21,9 @@ import android.widget.Toast;
 
 import com.azheng.sunnyweather.R;
 import com.azheng.sunnyweather.data.CityRepository;
+import com.azheng.sunnyweather.data.db.City;
+import com.azheng.sunnyweather.data.db.DBData;
+import com.azheng.sunnyweather.data.db.DBManager;
 import com.azheng.sunnyweather.data.model.CityModel;
 import com.azheng.sunnyweather.databinding.CityItemBinding;
 import com.azheng.sunnyweather.util.NetCallback;
@@ -26,6 +31,7 @@ import com.azheng.sunnyweather.util.ToolUnit;
 import com.azheng.sunnyweather.util.weight.FloatView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.RequiresApi;
 import androidx.databinding.DataBindingUtil;
@@ -42,7 +48,9 @@ public class CityViewModle extends ViewModel{
 
     public MutableLiveData<Boolean> hasCity;//是否有已添加城市
     public MutableLiveData<ArrayList<CityModel>> mCityList;//已添加城市列表
-    public MutableLiveData<ArrayList<CityModel>> mDBList;//城市选择列表
+
+    public MutableLiveData<List<DBData>> mDBList;//城市选择列表
+    private BroadcastReceiver mReceiver;
 
     public CityViewModle(CityRepository repository, Context context) {
         this.repository = repository;
@@ -51,6 +59,24 @@ public class CityViewModle extends ViewModel{
         hasCity = new MutableLiveData<>();
         mCityList = new MutableLiveData<>();
         mDBList = new MutableLiveData<>();
+
+        mReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals("PROVICENS_CLIK")){
+                    int pid = intent.getIntExtra("provices_id",0);
+                    getCitys(pid);
+                } else if (intent.getAction().equals("ADD_CITY")){
+                    String cityname = intent.getStringExtra("add_city");
+                    DBManager.getIns().putCity(cityname);
+                    getAddCity();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("PROVICENS_CLIK");
+        filter.addAction("ADD_CITY");
+        context.registerReceiver(mReceiver,filter);
     }
 
     public void getAddCity(){
@@ -60,7 +86,41 @@ public class CityViewModle extends ViewModel{
                 if (data != null && data.size() > 0){
                     hasCity.setValue(true);
                     mCityList.setValue(data);
+
+                    //回到主界面
+                    Activity activity = (Activity) context;
+                    if (activity instanceof CityChooseActivity){
+                        activity.onBackPressed();
+                    }
                 }
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                ToolUnit.toast(msg);
+            }
+        });
+    }
+
+    public void getProvinces(){
+        repository.getProvince(new NetCallback<List<DBData>>() {
+            @Override
+            public void onSucess(List<DBData> data) {
+                mDBList.setValue(data);
+            }
+
+            @Override
+            public void onFailure(String msg) {
+                ToolUnit.toast(msg);
+            }
+        });
+    }
+
+    public void getCitys(int pid){
+        repository.getCity(pid,new NetCallback<List<DBData>>() {
+            @Override
+            public void onSucess(List<DBData> data) {
+                mDBList.setValue(data);
             }
 
             @Override

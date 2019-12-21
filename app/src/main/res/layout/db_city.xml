@@ -3,7 +3,7 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <variable name="city" type="com.azheng.sunnyweather.data.model.CityModel" />
+        <variable name="data" type="com.azheng.sunnyweather.data.db.DBData" />
     </data>
 
     <androidx.cardview.widget.CardView
@@ -31,7 +31,7 @@
                 android:id="@+id/item_city"
                 android:layout_marginLeft="15dp"
                 android:textSize="16sp"
-                android:text="@{city.cityName}"
+                android:text="@{data.name}"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
